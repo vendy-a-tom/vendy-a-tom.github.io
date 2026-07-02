@@ -715,6 +715,123 @@
         display: none;
       }
     }
+
+    .secret-corner-div {
+      position: fixed;
+      bottom: 7px;
+      right: 7px;
+      z-index: 9999; /* Ensures it stays on top of other elements */
+    }
+
+    .secret-link {
+      display: inline-block;
+      font-size: 1rem;
+      color: #b3b3b3;
+      text-decoration: none;
+      cursor: default;
+      transition: transform 0.3s;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* --- Screen 2: The Secret "Access Granted" Page --- */
+    #secret-screen {
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      color: #33ff33;
+      padding: 40px;
+      box-sizing: border-box;
+      position: relative;
+
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .terminal-container {
+      width: 100%;
+      max-width: 750px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    /* CRT Scanline Effect Overlay */
+    #secret-screen::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 255, 0, 0.06));
+      z-index: 2;
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+    }
+
+    .terminal-header {
+      border-bottom: 2px solid #33ff33;
+      width: 100%;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .alert-banner {
+      background-color: #33ff33;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      font-size: 1.5rem;
+      animation: blink 1s infinite;
+      margin-bottom: 30px;
+    }
+
+    .system-log {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      width: 100%;
+    }
+
+    /* --- Interactive Input Styles (Aligned) --- */
+    .input-line {
+      display: flex;
+      width: 100%;
+      align-items: center; /* Vertically centers the items inside the row */
+      margin-top: 20px;
+    }
+
+    .prompt {
+      color: #33ff33;
+      font-size: 1.1rem;
+      line-height: 1.2; /* Explicit line-height prevents vertical drift */
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+
+    #terminal-input {
+      background: transparent;
+      border: none;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.1rem;
+      line-height: 1.2; /* Exactly matches the prompt's line-height */
+      outline: none;
+      flex-grow: 1;
+      padding: 0;
+      margin: 0;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
   </style>
 </head>
 
@@ -767,7 +884,7 @@
     </symbol>
   </svg>
 
-  <div class="page">
+  <div class="page" id="decoy-screen">
     <header class="hero" id="nahoru">
       <div class="hero__photos" aria-hidden="true">
         <figure class="hero__photo hero__photo--family">
@@ -824,7 +941,7 @@
         <li>
           <span class="icon" aria-hidden="true"><svg><use href="#icon-bed"></use></svg></span>
           <div class="info-text">
-            Naopak pro Vás rádi zajistíme ubytování:
+            Naopak pro Vás rádi zajistíme a uhradíme ubytování:
             <ul class="sub-list">
               <li>v hotelových apartmánech,</li>
               <li>v táborových chatkách pro čtyři osoby,</li>
@@ -881,5 +998,100 @@
       <p class="footer__date">21. srpna 2026</p>
     </footer>
   </div>
+  <div class="secret-corner-div">
+    <a id="gatekeeper-link" class="secret-link">π</a>
+  </div>
+
+  <div id="secret-screen" class="hidden">
+    <div class="terminal-container">
+      <div class="terminal-header">
+        ============== GATEKEEPER MAINFRAME V.4.11 ==============
+      </div>
+
+      <div class="alert-banner">
+        *** ACCESS GRANTED // OVERRIDE SUCCESSFUL ***
+      </div>
+
+      <div class="system-log" id="log-output">Bypassing firewalls...
+        Establishing secure proxy tunnel...
+        Target: CyberBeat / Gatekeeper Database
+        Identity Confirmed: Bennett, A.
+        Downloading decrypted files...</div>
+
+      <div class="input-line hidden" id="prompt-line">
+        <span class="prompt">gatekeeper@mainframe:~$</span>
+        <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const secretLink = document.getElementById('gatekeeper-link');
+    const decoyScreen = document.getElementById('decoy-screen');
+    const secretScreen = document.getElementById('secret-screen');
+    const logOutput = document.getElementById('log-output');
+    const promptLine = document.getElementById('prompt-line');
+    const terminalInput = document.getElementById('terminal-input');
+
+    const initialLogText = logOutput.textContent;
+
+    secretLink.addEventListener('click', (event) => {
+      if (event.ctrlKey && event.shiftKey && event.button === 0) {
+        decoyScreen.classList.add('hidden');
+        secretScreen.classList.remove('hidden');
+        simulateTerminalTyping();
+      } else {
+        event.preventDefault();
+      }
+    });
+
+    secretScreen.addEventListener('click', () => {
+      if (!promptLine.classList.contains('hidden')) {
+        terminalInput.focus();
+      }
+    });
+
+    terminalInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        const rawInput = terminalInput.value;
+        const command = rawInput.trim().toLowerCase();
+
+        if (command === 'exit') {
+          secretScreen.classList.add('hidden');
+          decoyScreen.classList.remove('hidden');
+          promptLine.classList.add('hidden');
+          terminalInput.value = '';
+          logOutput.textContent = initialLogText;
+        } else if (command !== '') {
+          logOutput.textContent += `\n\n$ ${rawInput}\n[ERROR] Command unrecognized. Gatekeeper mainframe access restricted.`;
+          terminalInput.value = '';
+          secretScreen.scrollTop = secretScreen.scrollHeight;
+        }
+      }
+    });
+
+    function simulateTerminalTyping() {
+      const extraLines = [
+        "\n\n[INFO] Extracting 'Gatekeeper' master keys...",
+        "\n[SUCCESS] 2,412 records copied to local buffer.",
+        "\n[READY] System at your command. Type 'exit' to log out."
+      ];
+
+      let lineIndex = 0;
+
+      function printNextLine() {
+        if (lineIndex < extraLines.length) {
+          logOutput.textContent += extraLines[lineIndex];
+          lineIndex++;
+          setTimeout(printNextLine, 1000);
+        } else {
+          promptLine.classList.remove('hidden');
+          terminalInput.focus();
+        }
+      }
+
+      setTimeout(printNextLine, 1200);
+    }
+  </script>
 </body>
 </html>
