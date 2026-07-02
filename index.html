@@ -1065,6 +1065,7 @@
       if (isTerminalActive === "true") {
         // Reveal the terminal background container
         decoyScreen.classList.add('hidden');
+        secretLink.classList.add('hidden');
         secretScreen.classList.remove('hidden');
 
         // Trigger the delayed boot typing sequence, passing 'true' for a restored session
@@ -1078,6 +1079,7 @@
         setCookie(COOKIE_NAME, "true", 1);
 
         decoyScreen.classList.add('hidden');
+        secretLink.classList.add('hidden');
         secretScreen.classList.remove('hidden');
 
         // Trigger normal first-time boot typing sequence
@@ -1104,6 +1106,7 @@
 
           secretScreen.classList.add('hidden');
           decoyScreen.classList.remove('hidden');
+          secretLink.classList.remove('hidden');
           promptLine.classList.add('hidden');
           terminalInput.value = '';
           logOutput.textContent = initialLogText;
