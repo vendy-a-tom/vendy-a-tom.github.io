@@ -1005,18 +1005,14 @@
   <div id="secret-screen" class="hidden">
     <div class="terminal-container">
       <div class="terminal-header">
-        ============== GATEKEEPER MAINFRAME V.4.11 ==============
+        ============== GATEKEEPER MAINFRAME V4.12 ==============
       </div>
 
       <div class="alert-banner">
         *** ACCESS GRANTED // OVERRIDE SUCCESSFUL ***
       </div>
 
-      <div class="system-log" id="log-output">Bypassing firewalls...
-        Establishing secure proxy tunnel...
-        Target: CyberBeat / Gatekeeper Database
-        Identity Confirmed: Bennett, A.
-        Downloading decrypted files...</div>
+      <div class="system-log" id="log-output"></div>
 
       <div class="input-line hidden" id="prompt-line">
         <span class="prompt">gatekeeper@mainframe:~$</span>
@@ -1034,12 +1030,58 @@
     const terminalInput = document.getElementById('terminal-input');
 
     const initialLogText = logOutput.textContent;
+    const COOKIE_NAME = "gatekeeper_session";
 
-    secretLink.addEventListener('click', (event) => {
-      if (event.ctrlKey && event.shiftKey && event.button === 0) {
+    // --- COOKIE HELPERS ---
+    function setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
+    }
+
+    function getCookie(name) {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+
+    function eraseCookie(name) {
+      document.cookie = name + '=; Max-Age=-99999999; path=/; SameSite=Strict';
+    }
+
+    // --- PERSISTENCE CHECK ON LOAD ---
+    window.addEventListener('DOMContentLoaded', () => {
+      const isTerminalActive = getCookie(COOKIE_NAME);
+
+      if (isTerminalActive === "true") {
+        // Reveal the terminal background container
         decoyScreen.classList.add('hidden');
         secretScreen.classList.remove('hidden');
-        simulateTerminalTyping();
+
+        // Trigger the delayed boot typing sequence, passing 'true' for a restored session
+        simulateTerminalTyping(true);
+      }
+    });
+
+    // --- CLICK TRIGGER ---
+    secretLink.addEventListener('click', (event) => {
+      if (event.ctrlKey && event.shiftKey && event.button === 0) {
+        setCookie(COOKIE_NAME, "true", 1);
+
+        decoyScreen.classList.add('hidden');
+        secretScreen.classList.remove('hidden');
+
+        // Trigger normal first-time boot typing sequence
+        simulateTerminalTyping(false);
       } else {
         event.preventDefault();
       }
@@ -1051,12 +1093,15 @@
       }
     });
 
+    // --- COMMAND HANDLER ---
     terminalInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         const rawInput = terminalInput.value;
         const command = rawInput.trim().toLowerCase();
 
         if (command === 'exit') {
+          eraseCookie(COOKIE_NAME);
+
           secretScreen.classList.add('hidden');
           decoyScreen.classList.remove('hidden');
           promptLine.classList.add('hidden');
@@ -1070,11 +1115,23 @@
       }
     });
 
-    function simulateTerminalTyping() {
-      const extraLines = [
-        "\n\n[INFO] Extracting 'Gatekeeper' master keys...",
+    // --- PROGRESSIVE TYPING SEQUENCE ---
+    function simulateTerminalTyping(isRestored = false) {
+      // Determine text pool based on whether it's a hot-wire link or a cookie refresh
+      const extraLines = isRestored ? [
+        "\n\n[INFO] Restoring session from the secure token..",
+        "\n[SUCCESS] Proxy tunnel re-established safely.\n\tTarget: CyberBeat / Gatekeeper Database\n\tIdentity Confirmed: Bennett, A.",
+        "\n[INFO] Extracting 'Gatekeeper' master keys..",
+        "\n[SUCCESS] 2,411 records copied to local buffer.",
+        "\n[INFO] The 'Mousebot' deployed successfully.\n\tTo further discuss the next phase, find ?him? at the wedding grounds.",
+        "\n[READY] Session restored. System at your command. Type 'exit' to log out."
+      ] : [
+        "\n[INFO] Bypassing firewalls..",
+        "\n[INFO] Establishing secure proxy tunnel..\n\tTarget: CyberBeat / Gatekeeper Database\n\tIdentity Confirmed: Bennett, A.",
+        "\n[INFO] Downloading decrypted files..",
+        "\n[INFO] Extracting 'Gatekeeper' master keys..",
         "\n[SUCCESS] 2,412 records copied to local buffer.",
-        "\n[INFO] The 'Mousebot' deployed successfully. To receive additional information, find him on the wedding grounds.",
+        "\n[INFO] The 'Mousebot' deployed successfully.\n\tTo further discuss the next phase, find ?him? at the wedding grounds.",
         "\n[READY] System at your command. Type 'exit' to log out."
       ];
 
@@ -1084,8 +1141,13 @@
         if (lineIndex < extraLines.length) {
           logOutput.textContent += extraLines[lineIndex];
           lineIndex++;
-          setTimeout(printNextLine, 1000);
+          if (lineIndex < extraLines.length) {
+            setTimeout(printNextLine, 1000);
+          } else {
+            printNextLine();
+          }
         } else {
+          // Reveal input prompt line and flash focus only after log completes printing
           promptLine.classList.remove('hidden');
           terminalInput.focus();
         }
