@@ -832,10 +832,218 @@
       50% { opacity: 0; }
       100% { opacity: 1; }
     }
+
+    body.is-popup-open {
+      overflow: hidden;
+    }
+
+    .wedding-popup {
+      width: min(94vw, 840px);
+      max-width: 840px;
+      max-height: none;
+      padding: 0;
+      border: 0;
+      border-radius: 28px;
+      background: transparent;
+      color: var(--ink, #4f5a50);
+      box-shadow: none;
+      overflow: visible;
+    }
+
+    .wedding-popup::backdrop {
+      background:
+              radial-gradient(circle at 50% 24%, rgba(255, 252, 244, 0.34), rgba(38, 50, 44, 0.42)),
+              rgba(30, 40, 36, 0.44);
+      backdrop-filter: blur(5px);
+    }
+
+    .wedding-popup__box {
+      position: relative;
+      box-sizing: border-box;
+      overflow: visible;
+      max-height: none;
+      padding: clamp(24px, 3.4vw, 38px) clamp(26px, 4vw, 46px);
+      border: 1px solid rgba(123, 116, 94, 0.34);
+      border-radius: 28px;
+      background:
+              linear-gradient(180deg, rgba(255, 253, 248, 0.97), rgba(247, 241, 230, 0.95));
+      box-shadow:
+              0 28px 80px rgba(43, 55, 49, 0.32),
+              inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      transform-origin: center center;
+    }
+
+    .wedding-popup__box::before {
+      content: "";
+      position: absolute;
+      inset: 13px;
+      pointer-events: none;
+      border: 1px solid rgba(140, 128, 100, 0.26);
+      border-radius: 20px;
+    }
+
+    .wedding-popup__content {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(14px, 1.55vw, 17px);
+      line-height: 1.43;
+    }
+
+    .wedding-popup__title {
+      margin: 0 0 16px;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(23px, 3.1vw, 34px);
+      font-weight: 600;
+      line-height: 1.14;
+      text-align: center;
+      color: #5c675c;
+    }
+
+    .wedding-popup__content p {
+      margin: 0 0 10px;
+    }
+
+    .wedding-popup__items {
+      display: grid;
+      gap: 7px;
+      margin: 18px 0 16px;
+    }
+
+    .wedding-popup__items p {
+      position: relative;
+      margin: 0;
+      padding-left: 21px;
+    }
+
+    .wedding-popup__items p::before {
+      content: "♡";
+      position: absolute;
+      left: 0;
+      top: 0.02em;
+      color: #8a8065;
+      font-size: 0.9em;
+    }
+
+    .wedding-popup__signature {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .wedding-popup__signature p {
+      margin-bottom: 15px;
+    }
+
+    .wedding-popup__names {
+      font-family: "Parisienne", "Great Vibes", cursive;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1;
+      color: #5e685d;
+    }
+
+    .wedding-popup__button {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: fit-content;
+      margin: 25px auto 0;
+      padding: 12px 24px;
+      border: 1px solid rgba(139, 124, 92, 0.34);
+      border-radius: 10px;
+      background: rgba(252, 248, 238, 0.74);
+      color: #5a6258;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow:
+              0 8px 22px rgba(72, 79, 68, 0.10),
+              inset 0 1px 0 rgba(255, 255, 255, 0.84);
+      transition:
+              background 160ms ease,
+              border-color 160ms ease,
+              transform 160ms ease;
+    }
+
+    .wedding-popup__button:hover {
+      background: rgba(255, 251, 242, 0.92);
+      border-color: rgba(139, 124, 92, 0.52);
+      transform: translateY(-1px);
+    }
+
+    .wedding-popup__button:focus-visible {
+      outline: 3px solid rgba(122, 142, 124, 0.42);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 620px) {
+      .wedding-popup {
+        width: 94vw;
+      }
+
+      .wedding-popup__box {
+        padding: 24px 20px;
+        border-radius: 22px;
+      }
+
+      .wedding-popup__box::before {
+        inset: 10px;
+        border-radius: 16px;
+      }
+
+      .wedding-popup__content {
+        font-size: 13.5px;
+        line-height: 1.36;
+      }
+
+      .wedding-popup__title {
+        margin-bottom: 13px;
+        font-size: 24px;
+      }
+
+      .wedding-popup__items {
+        gap: 5px;
+        margin: 14px 0;
+      }
+
+      .wedding-popup__button {
+        margin-top: 16px;
+        font-size: 18px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <dialog class="wedding-popup" id="weddingPopup" aria-labelledby="weddingPopupTitle">
+    <div class="wedding-popup__box">
+      <div class="wedding-popup__content">
+        <h2 class="wedding-popup__title" id="weddingPopupTitle">
+          Milí svatebčané, už se to blíži a tady je pár posledních organizačních informací
+        </h2>
+
+        <div class="wedding-popup__items">
+          <p>Příjezd si nemusíte plánovat nějak extra dříve, ideálně kolem 12:30 hod.</p>
+          <p>Ubytování na hotelu i v&nbsp;chatkách bude k dispozici až po obědě.</p>
+          <p>Kdo se bude potřebovat převléct, tak se poptejte na recepci. K&nbsp;dispozici bude erární pokoj.</p>
+          <p>V&nbsp;areálu chatek bude dopoledne ještě tábor, končit budou až po obědě. Tak tam prosím nechoďte dříve.</p>
+          <p>Do chatek si prosím vezměte své spacáky, případně polštářky.</p>
+          <p>Snídaně v&nbsp;sobotu pro všechny od 8:30-10:00</p>
+          <p>A poslední věc, nedělejte si starosti s&nbsp;kyticemi ke gratulacím, akorát by mě pak mrzelo, že všechny uschnou. ;-)</p>
+        </div>
+
+        <div class="wedding-popup__signature">
+          <p>Doufám, že se těšíte stejně jako my.</p>
+          <div class="wedding-popup__names">Vendy + Tom + Štěpánka</div>
+        </div>
+
+        <button class="wedding-popup__button" type="button" id="weddingPopupClose">
+          Rozumím, pusť mě dále..
+        </button>
+      </div>
+    </div>
+  </dialog>
+
   <svg class="visually-hidden" aria-hidden="true" focusable="false">
     <symbol id="icon-heart" viewBox="0 0 24 24">
       <path d="M12 20s-7.6-4.5-9.4-10.2C1.5 6.1 3.7 3.5 6.8 3.5c2.2 0 3.7 1.2 5.2 3 1.5-1.8 3-3 5.2-3 3.1 0 5.3 2.6 4.2 6.3C19.6 15.5 12 20 12 20z" />
@@ -1022,6 +1230,68 @@
   </div>
 
   <script>
+    (function () {
+      function initWeddingPopup() {
+        const popup = document.getElementById("weddingPopup");
+        const closeButton = document.getElementById("weddingPopupClose");
+        const popupBox = popup ? popup.querySelector(".wedding-popup__box") : null;
+
+        if (!popup || !closeButton || !popupBox) {
+          return;
+        }
+
+        function fitPopup() {
+          popupBox.style.transform = "scale(1)";
+
+          const viewportHeight = window.innerHeight;
+          const boxHeight = popupBox.getBoundingClientRect().height;
+          const availableHeight = viewportHeight - 36;
+
+          if (boxHeight > availableHeight) {
+            const scale = Math.max(0.78, availableHeight / boxHeight);
+            popupBox.style.transform = "scale(" + scale + ")";
+          }
+        }
+
+        function openPopup() {
+          document.body.classList.add("is-popup-open");
+
+          if (typeof popup.showModal === "function") {
+            popup.showModal();
+          } else {
+            popup.setAttribute("open", "");
+          }
+
+          requestAnimationFrame(fitPopup);
+        }
+
+        function closePopup() {
+          if (typeof popup.close === "function") {
+            popup.close();
+          } else {
+            popup.removeAttribute("open");
+          }
+
+          document.body.classList.remove("is-popup-open");
+        }
+
+        popup.addEventListener("cancel", function (event) {
+          event.preventDefault();
+        });
+
+        closeButton.addEventListener("click", closePopup);
+        window.addEventListener("resize", fitPopup);
+
+        openPopup();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initWeddingPopup);
+      } else {
+        initWeddingPopup();
+      }
+    })();
+
     const secretLink = document.getElementById('gatekeeper-link');
     const decoyScreen = document.getElementById('decoy-screen');
     const secretScreen = document.getElementById('secret-screen');
