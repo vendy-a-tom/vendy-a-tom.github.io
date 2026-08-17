@@ -838,8 +838,8 @@
     }
 
     .wedding-popup {
-      width: min(94vw, 840px);
-      max-width: 840px;
+      width: min(95vw, 900px);
+      max-width: 860px;
       max-height: none;
       padding: 0;
       border: 0;
@@ -855,6 +855,10 @@
               radial-gradient(circle at 50% 24%, rgba(255, 252, 244, 0.34), rgba(38, 50, 44, 0.42)),
               rgba(30, 40, 36, 0.44);
       backdrop-filter: blur(5px);
+    }
+
+    .wedding-popup__nowrap {
+      white-space: nowrap;
     }
 
     .wedding-popup__box {
@@ -1011,6 +1015,36 @@
         font-size: 18px;
       }
     }
+
+    .wedding-popup__content {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .wedding-popup__items,
+    .wedding-popup__items p,
+    .wedding-popup__signature p {
+      font-size: 14px;
+      line-height: 1.55;
+      font-weight: 400;
+    }
+
+    .wedding-popup__items p::before {
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 620px) {
+      .wedding-popup__content,
+      .wedding-popup__items,
+      .wedding-popup__items p,
+      .wedding-popup__signature p,
+      .wedding-popup__items p::before {
+        font-size: 14px;
+        line-height: 1.55;
+      }
+    }
   </style>
 </head>
 
@@ -1019,7 +1053,7 @@
     <div class="wedding-popup__box">
       <div class="wedding-popup__content">
         <h2 class="wedding-popup__title" id="weddingPopupTitle">
-          Milí svatebčané, už se to blíži a tady je pár posledních organizačních informací
+          Milí svatebčané, už se to blíží a tady je pár posledních organizačních informací
         </h2>
 
         <div class="wedding-popup__items">
@@ -1029,7 +1063,7 @@
           <p>V&nbsp;areálu chatek bude dopoledne ještě tábor, končit budou až po obědě. Tak tam prosím nechoďte dříve.</p>
           <p>Do chatek si prosím vezměte své spacáky, případně polštářky.</p>
           <p>Snídaně v&nbsp;sobotu pro všechny od 8:30-10:00</p>
-          <p>A poslední věc, nedělejte si starosti s&nbsp;kyticemi ke gratulacím, akorát by mě pak mrzelo, že všechny uschnou. ;-)</p>
+          <p>A poslední věc, nedělejte si starosti s&nbsp;kyticemi ke gratulacím, akorát by mě pak mrzelo, že všechny uschnou.&nbsp;<span class="wedding-popup__nowrap">&#9786;</span></p>
         </div>
 
         <div class="wedding-popup__signature">
@@ -1038,7 +1072,7 @@
         </div>
 
         <button class="wedding-popup__button" type="button" id="weddingPopupClose">
-          Rozumím, pusť mě dále..
+          Beru na vědomí, přijímám a potvrzuji, prostě už chci jít dále..
         </button>
       </div>
     </div>
